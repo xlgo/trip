@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hnzxl.trip.project.dao.SysAreaMapper">
+	<resultMap id="BaseResultMap" type="cn.hnzxl.trip.project.model.SysArea">
+		<id column="area_id" property="areaId" jdbcType="VARCHAR" />
+		<result column="area_p_id" property="areaPId" jdbcType="VARCHAR" />
+		<result column="area_type" property="areaType" jdbcType="INTEGER" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="area_remark" property="areaRemark" jdbcType="VARCHAR" />
+		<result column="area_en_name" property="areaEnName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+		
+		<result column="area_p_name" property="areaPName" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		area_id, area_p_id, area_type, area_name,area_remark, area_en_name, create_time, create_by, update_time,
+		update_by
+	</sql>
+	<sql id="Base_Dynamic_Where">
+		<where>
+			<if test="@Ognl@isNotEmpty( areaPId )">
+				AND area_p_id = #{areaPId}
+			</if>
+			<if test="@Ognl@isNotEmpty( areaType )">
+				AND area_type = #{areaType}
+			</if>
+			<if test="@Ognl@isNotEmpty( areaName )">
+				AND (
+					area_name like #{areaName}
+					OR area_en_name like #{areaName}
+				)
+			</if>
+			<if test="@Ognl@isNotEmpty( areaEnName )">
+				AND area_en_name = #{areaEnName}
+			</if>
+			<if test="@Ognl@isNotEmpty( createBy )">
+				AND create_by = #{createBy}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />,(select area_name from sys_area inne  where inne.area_id = t.area_p_id) area_p_name
+		from sys_area t
+		<include refid="Base_Dynamic_Where" />
+		<if test="@Ognl@isNotEmpty( sortField )">
+			order by ${sortField} ${sortOrder}
+		</if>
+		<if test="@Ognl@isEmpty( sortField )">
+			order by create_time desc
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sys_area
+		where area_id = #{areaId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from sys_area
+		where area_id = #{areaId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.hnzxl.trip.project.model.SysArea">
+		insert into sys_area (area_id, area_p_id, area_type,
+		area_name,area_remark, area_en_name, create_time,
+		create_by, update_time, update_by
+		)
+		values (#{areaId,jdbcType=VARCHAR}, #{areaPId,jdbcType=VARCHAR}, #{areaType,jdbcType=INTEGER},
+		#{areaName,jdbcType=VARCHAR},#{areaRemark,jdbcType=VARCHAR}, #{areaEnName,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE},
+		#{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=DATE}, #{updateBy,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="cn.hnzxl.trip.project.model.SysArea">
+		insert into sys_area
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="areaId != null">
+				area_id,
+			</if>
+			<if test="areaPId != null">
+				area_p_id,
+			</if>
+			<if test="areaType != null">
+				area_type,
+			</if>
+			<if test="areaName != null">
+				area_name,
+			</if>
+			<if test="areaRemark != null">
+				area_remark,
+			</if>
+			<if test="areaEnName != null">
+				area_en_name,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="areaId != null">
+				#{areaId,jdbcType=VARCHAR},
+			</if>
+			<if test="areaPId != null">
+				#{areaPId,jdbcType=VARCHAR},
+			</if>
+			<if test="areaType != null">
+				#{areaType,jdbcType=INTEGER},
+			</if>
+			<if test="areaName != null">
+				#{areaName,jdbcType=VARCHAR},
+			</if>
+			<if test="areaRemark != null">
+				#{areaRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="areaEnName != null">
+				#{areaEnName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.hnzxl.trip.project.model.SysArea">
+		update sys_area
+		<set>
+			<if test="areaPId != null">
+				area_p_id = #{areaPId,jdbcType=VARCHAR},
+			</if>
+			<if test="areaType != null">
+				area_type = #{areaType,jdbcType=INTEGER},
+			</if>
+			<if test="areaName != null">
+				area_name = #{areaName,jdbcType=VARCHAR},
+			</if>
+			<if test="areaRemark != null">
+				area_remark = #{areaRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="areaEnName != null">
+				area_en_name = #{areaEnName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where area_id = #{areaId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.hnzxl.trip.project.model.SysArea">
+		update sys_area
+		set area_p_id = #{areaPId,jdbcType=VARCHAR},
+		area_type = #{areaType,jdbcType=INTEGER},
+		area_name = #{areaName,jdbcType=VARCHAR},
+		area_en_name = #{areaEnName,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=DATE},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=DATE},
+		update_by = #{updateBy,jdbcType=VARCHAR}
+		where area_id = #{areaId,jdbcType=VARCHAR}
+	</update>
+</mapper>

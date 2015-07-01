@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hnzxl.trip.project.dao.TripReserveMapper">
+	<resultMap id="BaseResultMap" type="cn.hnzxl.trip.project.model.TripReserve">
+		<id column="reserve_id" property="reserveId" jdbcType="VARCHAR" />
+		<result column="reserve_user" property="reserveUser" jdbcType="VARCHAR" />
+		<result column="reserve_time" property="reserveTime" jdbcType="DATE" />
+		<result column="reserve_be_reserve_user" property="reserveBeReserveUser" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		reserve_id, reserve_user, reserve_time, reserve_be_reserve_user, create_time, create_by,
+		update_time, update_by
+	</sql>
+	<sql id="Base_Dynamic_Where">
+		<where>
+			<if test="reserveId != null">
+				AND reserve_id=#{reserveId}
+			</if>
+			<if test="reserveUser != null">
+				AND reserve_user=#{reserveUser}
+			</if>
+			<if test="reserveTime != null">
+				AND reserve_time=#{reserveTime}
+			</if>
+			<if test="reserveBeReserveUser != null">
+				AND reserve_be_reserve_user=#{reserveBeReserveUser}
+			</if>
+		</where>
+	</sql>
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from trip_reserve
+		<include refid="Base_Dynamic_Where" />
+		<if test="@Ognl@isNotEmpty( sortField )">
+			order by ${sortField} ${sortOrder}
+		</if>
+		<if test="@Ognl@isEmpty( sortField )">
+			order by create_time desc
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from trip_reserve
+		where reserve_id = #{reserveId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from trip_reserve
+		where reserve_id = #{reserveId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.hnzxl.trip.project.model.TripReserve">
+		insert into trip_reserve (reserve_id, reserve_user, reserve_time,
+		reserve_be_reserve_user, create_time, create_by,
+		update_time, update_by)
+		values (#{reserveId,jdbcType=VARCHAR}, #{reserveUser,jdbcType=VARCHAR}, #{reserveTime,jdbcType=DATE},
+		#{reserveBeReserveUser,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{createBy,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=DATE}, #{updateBy,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.hnzxl.trip.project.model.TripReserve">
+		insert into trip_reserve
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="reserveId != null">
+				reserve_id,
+			</if>
+			<if test="reserveUser != null">
+				reserve_user,
+			</if>
+			<if test="reserveTime != null">
+				reserve_time,
+			</if>
+			<if test="reserveBeReserveUser != null">
+				reserve_be_reserve_user,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="reserveId != null">
+				#{reserveId,jdbcType=VARCHAR},
+			</if>
+			<if test="reserveUser != null">
+				#{reserveUser,jdbcType=VARCHAR},
+			</if>
+			<if test="reserveTime != null">
+				#{reserveTime,jdbcType=DATE},
+			</if>
+			<if test="reserveBeReserveUser != null">
+				#{reserveBeReserveUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.hnzxl.trip.project.model.TripReserve">
+		update trip_reserve
+		<set>
+			<if test="reserveUser != null">
+				reserve_user = #{reserveUser,jdbcType=VARCHAR},
+			</if>
+			<if test="reserveTime != null">
+				reserve_time = #{reserveTime,jdbcType=DATE},
+			</if>
+			<if test="reserveBeReserveUser != null">
+				reserve_be_reserve_user = #{reserveBeReserveUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where reserve_id = #{reserveId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.hnzxl.trip.project.model.TripReserve">
+		update trip_reserve
+		set reserve_user = #{reserveUser,jdbcType=VARCHAR},
+		reserve_time = #{reserveTime,jdbcType=DATE},
+		reserve_be_reserve_user = #{reserveBeReserveUser,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=DATE},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=DATE},
+		update_by = #{updateBy,jdbcType=VARCHAR}
+		where reserve_id = #{reserveId,jdbcType=VARCHAR}
+	</update>
+</mapper>

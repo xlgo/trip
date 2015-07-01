@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hnzxl.trip.project.dao.SysUserMapper">
+	<resultMap id="BaseResultMap" type="cn.hnzxl.trip.project.model.SysUser">
+		<id column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="user_username" property="userUsername" jdbcType="VARCHAR" />
+		<result column="user_password" property="userPassword" jdbcType="VARCHAR" />
+		<result column="user_role" property="userRole" jdbcType="VARCHAR" />
+		<result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+		<result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		user_id, user_name, user_username, user_password, user_role, user_email, user_phone,
+		create_time, create_by, update_time, update_by
+	</sql>
+	<sql id="Base_Dynamic_Where">
+		<where>
+			<if test="userId != null">
+				AND user_id = #{userId}
+			</if>
+			<if test="userName != null">
+				AND user_name = #{userName}
+			</if>
+			<if test="userUsername != null">
+				AND user_username = #{userUsername}
+			</if>
+			<if test="userPassword != null">
+				AND user_password = #{userPassword}
+			</if>
+			<if test="userRole != null">
+				AND user_role = #{userRole}
+			</if>
+			<if test="userEmail != null">
+				AND user_email = #{userEmail}
+			</if>
+			<if test="userPhone != null">
+				AND user_phone  = #{userPhone}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user
+		<include refid="Base_Dynamic_Where" />
+		<if test="@Ognl@isNotEmpty( sortField )">
+			order by ${sortField} ${sortOrder}
+		</if>
+		<if test="@Ognl@isEmpty( sortField )">
+			order by create_time desc
+		</if>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from sys_user
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.hnzxl.trip.project.model.SysUser">
+		insert into sys_user (user_id, user_name, user_username,
+		user_password, user_role, user_email,
+		user_phone, create_time, create_by,
+		update_time, update_by)
+		values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userUsername,jdbcType=VARCHAR},
+		#{userPassword,jdbcType=VARCHAR}, #{userRole,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR},
+		#{userPhone,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{createBy,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=DATE}, #{updateBy,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.hnzxl.trip.project.model.SysUser">
+		insert into sys_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="userUsername != null">
+				user_username,
+			</if>
+			<if test="userPassword != null">
+				user_password,
+			</if>
+			<if test="userRole != null">
+				user_role,
+			</if>
+			<if test="userEmail != null">
+				user_email,
+			</if>
+			<if test="userPhone != null">
+				user_phone,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userUsername != null">
+				#{userUsername,jdbcType=VARCHAR},
+			</if>
+			<if test="userPassword != null">
+				#{userPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="userRole != null">
+				#{userRole,jdbcType=VARCHAR},
+			</if>
+			<if test="userEmail != null">
+				#{userEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="userPhone != null">
+				#{userPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.hnzxl.trip.project.model.SysUser">
+		update sys_user
+		<set>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="userUsername != null">
+				user_username = #{userUsername,jdbcType=VARCHAR},
+			</if>
+			<if test="userPassword != null">
+				user_password = #{userPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="userRole != null">
+				user_role = #{userRole,jdbcType=VARCHAR},
+			</if>
+			<if test="userEmail != null">
+				user_email = #{userEmail,jdbcType=VARCHAR},
+			</if>
+			<if test="userPhone != null">
+				user_phone = #{userPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.hnzxl.trip.project.model.SysUser">
+		update sys_user
+		set user_name = #{userName,jdbcType=VARCHAR},
+		user_username = #{userUsername,jdbcType=VARCHAR},
+		user_password = #{userPassword,jdbcType=VARCHAR},
+		user_role = #{userRole,jdbcType=VARCHAR},
+		user_email = #{userEmail,jdbcType=VARCHAR},
+		user_phone = #{userPhone,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=DATE},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=DATE},
+		update_by = #{updateBy,jdbcType=VARCHAR}
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</update>
+</mapper>

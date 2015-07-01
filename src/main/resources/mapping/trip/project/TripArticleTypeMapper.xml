@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hnzxl.trip.project.dao.TripArticleTypeMapper">
+	<resultMap id="BaseResultMap" type="cn.hnzxl.trip.project.model.TripArticleType">
+		<id column="article_type_id" property="articleTypeId" jdbcType="VARCHAR" />
+		<result column="article_type_name" property="articleTypeName" jdbcType="VARCHAR" />
+		<result column="article_type_p_id" property="articleTypePId" jdbcType="VARCHAR" />
+		<result column="article_type_remark" property="articleTypeRemark" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		article_type_id, article_type_name, article_type_p_id, article_type_remark, create_time,
+		create_by, update_time, update_by
+	</sql>
+	<sql id="Base_Dynamic_Where">
+		<where>
+			<if test="articleTypeId != null">
+				AND article_type_id = #{articleTypeId}
+			</if>
+			<if test="articleTypeName != null">
+				AND article_type_name like #{articleTypeName}
+			</if>
+			<if test="articleTypePId != null">
+				AND article_type_p_id = #{articleTypePId}
+			</if>
+			<if test="articleTypeRemark != null">
+				AND article_type_remark like #{articleTypeRemark}
+			</if>
+		</where>
+	</sql>
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from trip_article_type
+		<include refid="Base_Dynamic_Where" />
+		<if test="@Ognl@isNotEmpty( sortField )">
+			order by ${sortField} ${sortOrder}
+		</if>
+		<if test="@Ognl@isEmpty( sortField )">
+			order by create_time desc
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from trip_article_type
+		where article_type_id = #{articleTypeId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from trip_article_type
+		where article_type_id = #{articleTypeId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.hnzxl.trip.project.model.TripArticleType">
+		insert into trip_article_type (article_type_id, article_type_name, article_type_p_id,
+		article_type_remark, create_time, create_by,
+		update_time, update_by)
+		values (#{articleTypeId,jdbcType=VARCHAR}, #{articleTypeName,jdbcType=VARCHAR}, #{articleTypePId,jdbcType=VARCHAR},
+		#{articleTypeRemark,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{createBy,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=DATE}, #{updateBy,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.hnzxl.trip.project.model.TripArticleType">
+		insert into trip_article_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="articleTypeId != null">
+				article_type_id,
+			</if>
+			<if test="articleTypeName != null">
+				article_type_name,
+			</if>
+			<if test="articleTypePId != null">
+				article_type_p_id,
+			</if>
+			<if test="articleTypeRemark != null">
+				article_type_remark,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="articleTypeId != null">
+				#{articleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="articleTypeName != null">
+				#{articleTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="articleTypePId != null">
+				#{articleTypePId,jdbcType=VARCHAR},
+			</if>
+			<if test="articleTypeRemark != null">
+				#{articleTypeRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.hnzxl.trip.project.model.TripArticleType">
+		update trip_article_type
+		<set>
+			<if test="articleTypeName != null">
+				article_type_name = #{articleTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="articleTypePId != null">
+				article_type_p_id = #{articleTypePId,jdbcType=VARCHAR},
+			</if>
+			<if test="articleTypeRemark != null">
+				article_type_remark = #{articleTypeRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where article_type_id = #{articleTypeId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.hnzxl.trip.project.model.TripArticleType">
+		update trip_article_type
+		set article_type_name = #{articleTypeName,jdbcType=VARCHAR},
+		article_type_p_id = #{articleTypePId,jdbcType=VARCHAR},
+		article_type_remark = #{articleTypeRemark,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=DATE},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=DATE},
+		update_by = #{updateBy,jdbcType=VARCHAR}
+		where article_type_id = #{articleTypeId,jdbcType=VARCHAR}
+	</update>
+</mapper>

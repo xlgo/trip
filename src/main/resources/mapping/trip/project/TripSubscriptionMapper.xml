@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hnzxl.trip.project.dao.TripSubscriptionMapper">
+	<resultMap id="BaseResultMap" type="cn.hnzxl.trip.project.model.TripSubscription">
+		<id column="subscription_id" property="subscriptionId" jdbcType="VARCHAR" />
+		<result column="subscription_user" property="subscriptionUser" jdbcType="VARCHAR" />
+		<result column="subscription_emal" property="subscriptionEmal" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		subscription_id, subscription_user, subscription_emal, create_time, create_by, update_time,
+		update_by
+	</sql>
+	<sql id="Base_Dynamic_Where">
+		<where>
+			<if test="subscriptionId != null">
+				AND subscription_id= #{subscriptionId}
+			</if>
+			<if test="subscriptionUser != null">
+				AND subscription_user= #{subscriptionUser}
+			</if>
+			<if test="subscriptionEmal != null">
+				AND subscription_emal = #{subscriptionEmal}
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from trip_subscription
+		<include refid="Base_Dynamic_Where" />
+		<if test="@Ognl@isNotEmpty( sortField )">
+			order by ${sortField} ${sortOrder}
+		</if>
+		<if test="@Ognl@isEmpty( sortField )">
+			order by create_time desc
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from trip_subscription
+		where subscription_id = #{subscriptionId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from trip_subscription
+		where subscription_id = #{subscriptionId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.hnzxl.trip.project.model.TripSubscription">
+		insert into trip_subscription (subscription_id, subscription_user,
+		subscription_emal, create_time, create_by,
+		update_time, update_by)
+		values (#{subscriptionId,jdbcType=VARCHAR}, #{subscriptionUser,jdbcType=VARCHAR},
+		#{subscriptionEmal,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{createBy,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=DATE}, #{updateBy,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.hnzxl.trip.project.model.TripSubscription">
+		insert into trip_subscription
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="subscriptionId != null">
+				subscription_id,
+			</if>
+			<if test="subscriptionUser != null">
+				subscription_user,
+			</if>
+			<if test="subscriptionEmal != null">
+				subscription_emal,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="subscriptionId != null">
+				#{subscriptionId,jdbcType=VARCHAR},
+			</if>
+			<if test="subscriptionUser != null">
+				#{subscriptionUser,jdbcType=VARCHAR},
+			</if>
+			<if test="subscriptionEmal != null">
+				#{subscriptionEmal,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.hnzxl.trip.project.model.TripSubscription">
+		update trip_subscription
+		<set>
+			<if test="subscriptionUser != null">
+				subscription_user = #{subscriptionUser,jdbcType=VARCHAR},
+			</if>
+			<if test="subscriptionEmal != null">
+				subscription_emal = #{subscriptionEmal,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where subscription_id = #{subscriptionId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.hnzxl.trip.project.model.TripSubscription">
+		update trip_subscription
+		set subscription_user = #{subscriptionUser,jdbcType=VARCHAR},
+		subscription_emal = #{subscriptionEmal,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=DATE},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=DATE},
+		update_by = #{updateBy,jdbcType=VARCHAR}
+		where subscription_id = #{subscriptionId,jdbcType=VARCHAR}
+	</update>
+</mapper>

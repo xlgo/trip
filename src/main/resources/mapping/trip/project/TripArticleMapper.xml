@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hnzxl.trip.project.dao.TripArticleMapper">
+	<resultMap id="BaseResultMap" type="cn.hnzxl.trip.project.model.TripArticle">
+		<id column="article_id" property="articleId" jdbcType="VARCHAR" />
+		<result column="article_type_id" property="articleTypeId" jdbcType="VARCHAR" />
+		<result column="article_days" property="articleDays" jdbcType="INTEGER" />
+		<result column="article_start_time" property="articleStartTime" jdbcType="VARCHAR" />
+		<result column="article_guide_id" property="articleGuideId" jdbcType="VARCHAR" />
+		<result column="article_label" property="articleLabel" jdbcType="VARCHAR" />
+		<result column="article_remind_area" property="articleRemindArea" jdbcType="VARCHAR" />
+		<result column="article_title" property="articleTitle" jdbcType="VARCHAR" />
+		<result column="article_elite" property="articleElite" jdbcType="INTEGER" />
+		<result column="article_create_by" property="articleCreateBy" jdbcType="VARCHAR" />
+		<result column="article_status" property="articleStatus" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+		<result column="article_type_name" property="articleTypeName" jdbcType="VARCHAR" />
+		<result column="guide_name" property="guideName" jdbcType="VARCHAR" />
+		<result column="guide_price" property="guidePrice" jdbcType="DOUBLE" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="cn.hnzxl.trip.project.model.TripArticle" extends="BaseResultMap">
+		<result column="article_content" property="articleContent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		article_id, article_type_id, article_days, article_start_time, article_guide_id,
+		article_label, article_remind_area, article_title, article_elite, article_create_by,
+		article_status, t.create_time, t.create_by, t.update_time, t.update_by
+	</sql>
+	<sql id="Blob_Column_List">
+		article_content
+	</sql>
+
+	<sql id="Base_Dynamic_Where">
+		<where>
+			<if test="articleId != null">
+				AND article_id = #{articleId}
+			</if>
+			<if test="articleTypeId != null">
+				AND article_type_id = #{articleTypeId}
+			</if>
+			<if test="articleDays != null">
+				AND article_days = #{articleDays}
+			</if>
+			<if test="articleStartTime != null">
+				AND article_start_time = #{articleStartTime}
+			</if>
+			<if test="articleGuideId != null">
+				article_guide_id = #{articleGuideId}
+			</if>
+			<if test="articleLabel != null">
+				AND article_label = #{articleLabel}
+			</if>
+			<if test="articleRemindArea != null">
+				AND article_remind_area = #{articleRemindArea}
+			</if>
+			<if test="articleTitle != null">
+				AND article_title like #{articleTitle}
+			</if>
+			<if test="articleElite != null">
+				AND article_elite = #{articleElite}
+			</if>
+			<if test="articleCreateBy != null">
+				AND article_create_by = #{articleCreateBy}
+			</if>
+			<if test="articleStatus != null">
+				AND article_status = #{articleStatus}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />,article_content,(select inn.article_type_name from trip_article_type inn where inn.article_type_id =t.article_type_id ) article_type_name,
+		t2.guide_name,t2.guide_price
+		from trip_article t left join trip_tour_guide t2 ON t.article_guide_id = t2.guide_id
+		<include refid="Base_Dynamic_Where" />
+		<if test="@Ognl@isNotEmpty( sortField )">
+			order by ${sortField} ${sortOrder}
+		</if>
+		<if test="@Ognl@isEmpty( sortField )">
+			order by create_time desc
+		</if>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />,(select inn.article_type_name from trip_article_type inn where inn.article_type_id =t.article_type_id ) article_type_name,
+		t2.guide_name,t2.guide_price
+		from trip_article t  left join trip_tour_guide t2 ON t.article_guide_id = t2.guide_id
+		where t.article_id = #{articleId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from trip_article
+		where article_id = #{articleId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.hnzxl.trip.project.model.TripArticle">
+		insert into trip_article (article_id, article_type_id, article_days,
+		article_start_time, article_guide_id, article_label,
+		article_remind_area, article_title, article_elite,
+		article_create_by, article_status, create_time,
+		create_by, update_time, update_by,
+		article_content)
+		values (#{articleId,jdbcType=VARCHAR}, #{articleTypeId,jdbcType=VARCHAR}, #{articleDays,jdbcType=INTEGER},
+		#{articleStartTime,jdbcType=VARCHAR}, #{articleGuideId,jdbcType=VARCHAR}, #{articleLabel,jdbcType=VARCHAR},
+		#{articleRemindArea,jdbcType=VARCHAR}, #{articleTitle,jdbcType=VARCHAR}, #{articleElite,jdbcType=INTEGER},
+		#{articleCreateBy,jdbcType=VARCHAR}, #{articleStatus,jdbcType=INTEGER}, #{createTime,jdbcType=DATE},
+		#{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=DATE}, #{updateBy,jdbcType=VARCHAR},
+		#{articleContent,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.hnzxl.trip.project.model.TripArticle">
+		insert into trip_article
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="articleId != null">
+				article_id,
+			</if>
+			<if test="articleTypeId != null">
+				article_type_id,
+			</if>
+			<if test="articleDays != null">
+				article_days,
+			</if>
+			<if test="articleStartTime != null">
+				article_start_time,
+			</if>
+			<if test="articleGuideId != null">
+				article_guide_id,
+			</if>
+			<if test="articleLabel != null">
+				article_label,
+			</if>
+			<if test="articleRemindArea != null">
+				article_remind_area,
+			</if>
+			<if test="articleTitle != null">
+				article_title,
+			</if>
+			<if test="articleElite != null">
+				article_elite,
+			</if>
+			<if test="articleCreateBy != null">
+				article_create_by,
+			</if>
+			<if test="articleStatus != null">
+				article_status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="articleContent != null">
+				article_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="articleId != null">
+				#{articleId,jdbcType=VARCHAR},
+			</if>
+			<if test="articleTypeId != null">
+				#{articleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="articleDays != null">
+				#{articleDays,jdbcType=INTEGER},
+			</if>
+			<if test="articleStartTime != null">
+				#{articleStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="articleGuideId != null">
+				#{articleGuideId,jdbcType=VARCHAR},
+			</if>
+			<if test="articleLabel != null">
+				#{articleLabel,jdbcType=VARCHAR},
+			</if>
+			<if test="articleRemindArea != null">
+				#{articleRemindArea,jdbcType=VARCHAR},
+			</if>
+			<if test="articleTitle != null">
+				#{articleTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="articleElite != null">
+				#{articleElite,jdbcType=INTEGER},
+			</if>
+			<if test="articleCreateBy != null">
+				#{articleCreateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="articleStatus != null">
+				#{articleStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="articleContent != null">
+				#{articleContent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.hnzxl.trip.project.model.TripArticle">
+		update trip_article
+		<set>
+			<if test="articleTypeId != null">
+				article_type_id = #{articleTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="articleDays != null">
+				article_days = #{articleDays,jdbcType=INTEGER},
+			</if>
+			<if test="articleStartTime != null">
+				article_start_time = #{articleStartTime,jdbcType=VARCHAR},
+			</if>
+			<if test="articleGuideId != null">
+				article_guide_id = #{articleGuideId,jdbcType=VARCHAR},
+			</if>
+			<if test="articleLabel != null">
+				article_label = #{articleLabel,jdbcType=VARCHAR},
+			</if>
+			<if test="articleRemindArea != null">
+				article_remind_area = #{articleRemindArea,jdbcType=VARCHAR},
+			</if>
+			<if test="articleTitle != null">
+				article_title = #{articleTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="articleElite != null">
+				article_elite = #{articleElite,jdbcType=INTEGER},
+			</if>
+			<if test="articleCreateBy != null">
+				article_create_by = #{articleCreateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="articleStatus != null">
+				article_status = #{articleStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="articleContent != null">
+				article_content = #{articleContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where article_id = #{articleId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.hnzxl.trip.project.model.TripArticle">
+		update trip_article
+		set article_type_id = #{articleTypeId,jdbcType=VARCHAR},
+		article_days = #{articleDays,jdbcType=INTEGER},
+		article_start_time = #{articleStartTime,jdbcType=VARCHAR},
+		article_guide_id = #{articleGuideId,jdbcType=VARCHAR},
+		article_label = #{articleLabel,jdbcType=VARCHAR},
+		article_remind_area = #{articleRemindArea,jdbcType=VARCHAR},
+		article_title = #{articleTitle,jdbcType=VARCHAR},
+		article_elite = #{articleElite,jdbcType=INTEGER},
+		article_create_by = #{articleCreateBy,jdbcType=VARCHAR},
+		article_status = #{articleStatus,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=DATE},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=DATE},
+		update_by = #{updateBy,jdbcType=VARCHAR},
+		article_content = #{articleContent,jdbcType=LONGVARCHAR}
+		where article_id = #{articleId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.hnzxl.trip.project.model.TripArticle">
+		update trip_article
+		set article_type_id = #{articleTypeId,jdbcType=VARCHAR},
+		article_days = #{articleDays,jdbcType=INTEGER},
+		article_start_time = #{articleStartTime,jdbcType=DATE},
+		article_guide_id = #{articleGuideId,jdbcType=VARCHAR},
+		article_label = #{articleLabel,jdbcType=VARCHAR},
+		article_remind_area = #{articleRemindArea,jdbcType=VARCHAR},
+		article_title = #{articleTitle,jdbcType=VARCHAR},
+		article_elite = #{articleElite,jdbcType=INTEGER},
+		article_create_by = #{articleCreateBy,jdbcType=VARCHAR},
+		article_status = #{articleStatus,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=DATE},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=DATE},
+		update_by = #{updateBy,jdbcType=VARCHAR}
+		where article_id = #{articleId,jdbcType=VARCHAR}
+	</update>
+</mapper>

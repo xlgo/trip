@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hnzxl.trip.project.dao.TripTourGuideMapper">
+	<resultMap id="BaseResultMap" type="cn.hnzxl.trip.project.model.TripTourGuide">
+		<id column="guide_id" property="guideId" jdbcType="VARCHAR" />
+		<result column="guide_name" property="guideName" jdbcType="VARCHAR" />
+		<result column="guide_en_name" property="guideEnName" jdbcType="VARCHAR" />
+		<result column="guide_from_place" property="guideFromPlace" jdbcType="VARCHAR" />
+		<result column="guide_residential" property="guideResidential" jdbcType="VARCHAR" />
+		<result column="guide_intro" property="guideIntro" jdbcType="VARCHAR" />
+		<result column="guide_details" property="guideDetails" jdbcType="VARCHAR" />
+		<result column="guide_service_area" property="guideServiceArea" jdbcType="VARCHAR" />
+		<result column="guide_city" property="guideCity" jdbcType="VARCHAR" />
+		<result column="guide_price" property="guidePrice" jdbcType="DOUBLE" />
+		<result column="guide_lable" property="guideLable" jdbcType="VARCHAR" />
+		<result column="guide_status" property="guideStatus" jdbcType="INTEGER" />
+		<result column="guide_remark" property="guideRemark" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		guide_id, guide_name, guide_en_name,guide_from_place, guide_residential, guide_intro, guide_details,
+		guide_service_area,
+		guide_city, guide_price, guide_lable, guide_status, guide_remark,
+		create_time, create_by, update_time, update_by
+	</sql>
+
+	<sql id="Base_Dynamic_Where">
+		<where>
+			<if test="guideId != null">
+				AND guide_id = #{guideId}
+			</if>
+			<if test="guideName != null">
+				AND (guide_name = #{guideName}
+					OR guide_en_name = #{guideName}
+				)
+			</if>
+			<if test="guideEnName != null">
+				AND guide_en_name = #{guideEnName}
+			</if>
+			<if test="guideFromPlace != null">
+				AND guide_from_place = #{guideFromPlace}
+			</if>
+			<if test="guideResidential != null">
+				AND guide_residential = #{guideResidential}
+			</if>
+			<if test="guideIntro != null">
+				AND guide_intro = #{guideIntro}
+			</if>
+			<if test="guideDetails != null">
+				AND guide_details = #{guideDetails}
+			</if>
+			<if test="guideServiceArea != null">
+				AND guide_service_area = #{guideServiceArea}
+			</if>
+			<if test="guideCity != null">
+				AND guide_city = #{guideCity}
+			</if>
+			<if test="guidePrice != null">
+				AND guide_price = #{guidePrice}
+			</if>
+			<if test="guideLable != null">
+				AND guide_lable = #{guideLable}
+			</if>
+			<if test="guideStatus != null">
+				AND guide_status = #{guideStatus}
+			</if>
+			<if test="guideRemark != null">
+				AND guide_remark = #{guideRemark}
+			</if>
+		</where>
+	</sql>
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from trip_tour_guide
+		<include refid="Base_Dynamic_Where" />
+		<if test="@Ognl@isNotEmpty( sortField )">
+			order by ${sortField} ${sortOrder}
+		</if>
+		<if test="@Ognl@isEmpty( sortField )">
+			order by create_time desc
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from trip_tour_guide
+		where guide_id = #{guideId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from trip_tour_guide
+		where guide_id =
+		#{guideId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.hnzxl.trip.project.model.TripTourGuide">
+		insert into trip_tour_guide (guide_id, guide_name, guide_en_name,guide_from_place,
+		guide_residential, guide_intro, guide_details,
+		guide_service_area, guide_city, guide_price,
+		guide_lable, guide_status,
+		guide_remark,
+		create_time, create_by, update_time,
+		update_by)
+		values (#{guideId,jdbcType=VARCHAR},
+		#{guideName,jdbcType=VARCHAR}, #{guideEnName,jdbcType=VARCHAR},#{guideFromPlace},
+		#{guideResidential,jdbcType=VARCHAR},
+		#{guideIntro,jdbcType=VARCHAR}, #{guideDetails,jdbcType=VARCHAR},
+		#{guideServiceArea,jdbcType=VARCHAR},
+		#{guideCity,jdbcType=VARCHAR}, #{guidePrice,jdbcType=DOUBLE},
+		#{guideLable,jdbcType=VARCHAR},
+		#{guideStatus,jdbcType=INTEGER}, #{guideRemark,jdbcType=VARCHAR},
+		#{createTime,jdbcType=DATE},
+		#{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=DATE},
+		#{updateBy,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.hnzxl.trip.project.model.TripTourGuide">
+		insert into trip_tour_guide
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="guideId != null">
+				guide_id,
+			</if>
+			<if test="guideName != null">
+				guide_name,
+			</if>
+			<if test="guideEnName != null">
+				guide_en_name,
+			</if>
+			<if test="guideFromPlace != null">
+				guide_from_place,
+			</if>
+			<if test="guideResidential != null">
+				guide_residential,
+			</if>
+			<if test="guideIntro != null">
+				guide_intro,
+			</if>
+			<if test="guideDetails != null">
+				guide_details,
+			</if>
+			<if test="guideServiceArea != null">
+				guide_service_area,
+			</if>
+			<if test="guideCity != null">
+				guide_city,
+			</if>
+			<if test="guidePrice != null">
+				guide_price,
+			</if>
+			<if test="guideLable != null">
+				guide_lable,
+			</if>
+			<if test="guideStatus != null">
+				guide_status,
+			</if>
+			<if test="guideRemark != null">
+				guide_remark,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="guideId != null">
+				#{guideId,jdbcType=VARCHAR},
+			</if>
+			<if test="guideName != null">
+				#{guideName,jdbcType=VARCHAR},
+			</if>
+			<if test="guideEnName != null">
+				#{guideEnName,jdbcType=VARCHAR},
+			</if>
+			<if test="guideFromPlace != null">
+				#{guideFromPlace},
+			</if>
+			<if test="guideResidential != null">
+				#{guideResidential,jdbcType=VARCHAR},
+			</if>
+			<if test="guideIntro != null">
+				#{guideIntro,jdbcType=VARCHAR},
+			</if>
+			<if test="guideDetails != null">
+				#{guideDetails,jdbcType=VARCHAR},
+			</if>
+			<if test="guideServiceArea != null">
+				#{guideServiceArea,jdbcType=VARCHAR},
+			</if>
+			<if test="guideCity != null">
+				#{guideCity,jdbcType=VARCHAR},
+			</if>
+			<if test="guidePrice != null">
+				#{guidePrice,jdbcType=DOUBLE},
+			</if>
+			<if test="guideLable != null">
+				#{guideLable,jdbcType=VARCHAR},
+			</if>
+			<if test="guideStatus != null">
+				#{guideStatus,jdbcType=INTEGER},
+			</if>
+			<if test="guideRemark != null">
+				#{guideRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.hnzxl.trip.project.model.TripTourGuide">
+		update trip_tour_guide
+		<set>
+			<if test="guideName != null">
+				guide_name = #{guideName,jdbcType=VARCHAR},
+			</if>
+			<if test="guideEnName != null">
+				guide_en_name = #{guideEnName,jdbcType=VARCHAR},
+			</if>
+			<if test="guideFromPlace != null">
+				guide_from_place = #{guideFromPlace,jdbcType=VARCHAR},
+			</if>
+			<if test="guideResidential != null">
+				guide_residential = #{guideResidential,jdbcType=VARCHAR},
+			</if>
+			<if test="guideIntro != null">
+				guide_intro = #{guideIntro,jdbcType=VARCHAR},
+			</if>
+			<if test="guideDetails != null">
+				guide_details = #{guideDetails,jdbcType=VARCHAR},
+			</if>
+			<if test="guideServiceArea != null">
+				guide_service_area = #{guideServiceArea,jdbcType=VARCHAR},
+			</if>
+			<if test="guideCity != null">
+				guide_city = #{guideCity,jdbcType=VARCHAR},
+			</if>
+			<if test="guidePrice != null">
+				guide_price = #{guidePrice,jdbcType=DOUBLE},
+			</if>
+			<if test="guideLable != null">
+				guide_lable = #{guideLable,jdbcType=VARCHAR},
+			</if>
+			<if test="guideStatus != null">
+				guide_status = #{guideStatus,jdbcType=INTEGER},
+			</if>
+			<if test="guideRemark != null">
+				guide_remark = #{guideRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=DATE},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where guide_id = #{guideId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="cn.hnzxl.trip.project.model.TripTourGuide">
+		update trip_tour_guide
+		set guide_name =
+		#{guideName,jdbcType=VARCHAR},
+		guide_en_name = #{guideEnName,jdbcType=VARCHAR},
+		guide_from_place = #{guideFromPlace,jdbcType=VARCHAR},
+		guide_residential =
+		#{guideResidential,jdbcType=VARCHAR},
+		guide_intro = #{guideIntro,jdbcType=VARCHAR},
+		guide_details =
+		#{guideDetails,jdbcType=VARCHAR},
+		guide_service_area = #{guideServiceArea,jdbcType=VARCHAR},
+		guide_city =
+		#{guideCity,jdbcType=VARCHAR},
+		guide_price = #{guidePrice,jdbcType=DOUBLE},
+		guide_lable =
+		#{guideLable,jdbcType=VARCHAR},
+		guide_status = #{guideStatus,jdbcType=INTEGER},
+		guide_remark =
+		#{guideRemark,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=DATE},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=DATE},
+		update_by = #{updateBy,jdbcType=VARCHAR}
+		where guide_id =
+		#{guideId,jdbcType=VARCHAR}
+	</update>
+</mapper>
